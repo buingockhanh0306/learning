@@ -105,29 +105,35 @@
                   Trang chủ
                 </a>
               </li>
+              <li
+                class="cursor-pointer"
+                @click="$router.push('/irregular_verbs')"
+              >
+                <a
+                  :class="
+                    $route.path === '/irregular_verbs' &&
+                    'text-textHover bg-gray-100'
+                  "
+                  class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-lg hover:bg-gray-100"
+                >
+                  <span class="text-xl font-light material-symbols-outlined">
+                    extension
+                  </span>
+                  Động từ BQT
+                </a>
+              </li>
               <SubMenuSidebar
                 :dataSubmenu="listTenses"
-                iconName="auto_stories"
+                iconName="schedule"
                 pathParent="tenses"
                 textParent="Thì trong câu"
               />
               <SubMenuSidebar
                 :dataSubmenu="listConditional"
-                iconName="auto_stories"
+                iconName="conditions"
                 pathParent="conditional-sentences"
                 textParent="Câu điều kiện"
               />
-              <li class="cursor-pointer" @click="$router.push('/setting-name')">
-                <a
-                  :class="$route.path === '/setting-name' && 'bg-gray-100'"
-                  class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-lg hover:bg-gray-100"
-                >
-                  <span class="text-xl font-light material-symbols-outlined">
-                    group_add
-                  </span>
-                  Thiết lập họ tên
-                </a>
-              </li>
             </ul>
           </nav>
         </div>
@@ -136,7 +142,7 @@
 
       <!-- Content -->
       <div
-        class="w-full min-h-screen px-4 pt-10 pb-20 overflow-auto sm:px-6 md:px-8 lg:ps-72"
+        class="w-full min-h-screen px-4 pt-10 pb-20 sm:px-6 md:px-8 lg:ps-72"
         :class="$route.path === '/lunar' && 'pt-0 pb-0 h-full'"
       >
         <Nuxt />

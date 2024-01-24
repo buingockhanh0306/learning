@@ -1,8 +1,14 @@
 export const state = () => ({
   tenses: [],
   tenseDetail: null,
+  irregularVerbs: [],
   conditional: [],
   conditionalDetail: null,
+  pagination: {
+    itemPerPage: 10,
+    totalPage: 6,
+    currentPage: 1,
+  },
 });
 
 export const getters = {
@@ -17,6 +23,12 @@ export const getters = {
   },
   conditionalDetail(state) {
     return state.conditionalDetail;
+  },
+  pagination(state) {
+    return state.pagination;
+  },
+  listIrregularVerbs(state) {
+    return state.irregularVerbs;
   },
 };
 
@@ -33,9 +45,18 @@ export const mutations = {
   SET_CONDITIONAL_DETAIL(state, payload) {
     state.conditionalDetail = payload;
   },
+  SET_PAGINATION(state, payload) {
+    state.pagination = payload;
+  },
+  SET_LIST_IRREGULAR_VERBS(state, payload) {
+    state.irregularVerbs = payload;
+  },
 };
 
 export const actions = {
+  setPagination({ commit }, payload) {
+    commit("SET_PAGINATION", payload);
+  },
   async getTenses({ commit }) {
     const collection = await this.$fire.firestore.collection("tenses").get();
     const data = await collection.docs.map((doc) => ({
@@ -82,5 +103,22 @@ export const actions = {
         resolve("");
       });
     }
+  },
+  async getIrregularVerbs({ state, commit }, payload) {
+    const collection = await this.$fire.firestore
+      .collection("irregular_verbs")
+      .get();
+    const data = collection.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    commit("SET_PAGINATION", {
+      ...state.pagination,
+      totalPage: Math.ceil(data.length / state.pagination.itemPerPage),
+    });
+    commit(
+      "SET_LIST_IRREGULAR_VERBS",
+      data.slice(
+        (payload.currentPage - 1) * payload.itemPerPage,
+        payload.currentPage * payload.itemPerPage
+      )
+    );
   },
 };
