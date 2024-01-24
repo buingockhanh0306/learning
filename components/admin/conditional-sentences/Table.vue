@@ -86,10 +86,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("admin", ["listTenses", "pagination"]),
+    ...mapGetters("admin", ["listConditional", "pagination"]),
   },
   methods: {
-    ...mapActions("admin", ["deleteTense", "getTenses"]),
+    ...mapActions("admin", ["deleteConditional", "getConditional"]),
     ...mapActions(["setNotify"]),
     handleConfirm(id) {
       this.idDelete = id;
@@ -100,17 +100,17 @@ export default {
     },
     async handleDelete() {
       try {
-        await this.deleteTense(this.idDelete);
+        await this.deleteConditional(this.idDelete);
         this.setNotify({
           isOpen: true,
           text: "Deleted successfully!",
           type: "success",
         });
-        await this.getTenses(this.pagination);
+        await this.getConditional(this.pagination);
       } catch (error) {}
     },
     redirectEdit(id) {
-      this.$router.push(`/admin/tenses/${id}`);
+      this.$router.push(`/admin/conditional-sentences/${id}`);
     },
   },
 };

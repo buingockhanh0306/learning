@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Heading text="Update tense" />
+    <Heading text="Update Conditional Sentences" />
     <div class="flex flex-col gap-4 mt-8">
       <div
         class="flex laptop:flex-row laptop:gap-16 mobile:flex-col mobile:gap-4"
@@ -106,6 +106,7 @@ export default {
     return {
       title: "",
       description: "",
+      image: "",
       slug: "",
       content: "",
       tinyMCEKey: process.env.tinyMCEKey,
@@ -114,6 +115,7 @@ export default {
         title: "",
         slug: "",
         description: "",
+        image: "",
         content: "",
       },
       initEditor: {
@@ -129,7 +131,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("admin", ["tenseDetail"]),
+    ...mapGetters("admin", ["conditionalDetail"]),
     isDisableButton: {
       get() {
         return !!(
@@ -147,13 +149,13 @@ export default {
     },
   },
   async mounted() {
-    await this.getTenseById(this.$route.params.id);
-    this.title = this.tenseDetail.title;
-    this.description = this.tenseDetail.description;
-    this.content = this.tenseDetail.content;
+    await this.getConditionalById(this.$route.params.id);
+    this.title = this.conditionalDetail.title;
+    this.description = this.conditionalDetail.description;
+    this.content = this.conditionalDetail.content;
   },
   methods: {
-    ...mapActions("admin", ["updateTense", "getTenseById"]),
+    ...mapActions("admin", ["updateConditional", "getConditionalById"]),
     ...mapActions(["setNotify"]),
     handleInput(field) {
       this.errorField[field] = "";
@@ -165,11 +167,11 @@ export default {
       }
     },
     handleBack() {
-      this.$router.push("/admin/tenses/");
+      this.$router.push("/admin/conditional-sentences/");
     },
     async handleUpdate() {
       try {
-        await this.updateTense({
+        await this.updateConditional({
           data: {
             title: this.title,
             slug: this.slug,
@@ -178,7 +180,7 @@ export default {
           },
           id: this.$route.params.id,
         });
-        this.$router.push("/admin/tenses");
+        this.$router.push("/admin/conditional-sentences");
         this.setNotify({
           isOpen: true,
           text: "Updated successfully!",

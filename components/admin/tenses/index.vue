@@ -1,14 +1,9 @@
 <template>
   <div>
-    <Heading text="Quản lý bài viết" />
+    <Heading text="Tenses Manager" />
     <div class="flex justify-end mt-8 mb-4">
       <div>
-        <Button iconName="add" @handleClick="redirectAddTense" text="Thêm" />
-      </div>
-    </div>
-    <div class="flex justify-end mt-8 mb-4">
-      <div>
-        <Button iconName="add" @handleClick="redirectAddBQT" text="Thêm BQT" />
+        <Button iconName="add" @handleClick="redirectAddTense" text="Add" />
       </div>
     </div>
     <Table :headers="headers" :dataTable="listTenses" />
@@ -19,8 +14,8 @@
         :page-range="3"
         :value="pagination.currentPage"
         :click-handler="handleChangePage"
-        prev-text="Trước"
-        next-text="Tiếp"
+        prev-text="Prev"
+        next-text="Next"
         container-class="pagination"
         page-class="pagination-item"
         prev-class="pagination-prev"
@@ -47,7 +42,7 @@ export default {
   },
   data() {
     return {
-      headers: ["STT", "Tiêu đề", "Slug", "Mô tả", "Tùy chọn"],
+      headers: ["No.", "Title", "Slug", "Description", "Options"],
       dataBQT: [
         {
           base: "abide",
@@ -3675,22 +3670,6 @@ export default {
         currentPage: page,
       });
       await this.getTenses(this.pagination);
-    },
-
-    async redirectAddBQT() {
-      this.dataBQT.forEach(async (item) => {
-        await this.updateIrregularVerb({
-          data: {
-            base: item.base,
-            baseIPA: item.baseIPA,
-            past: item.past,
-            past2: item.past2,
-            past2IPA: item.past2IPA,
-            pastIPA: item.pastIPA,
-          },
-          id: uuidv4(),
-        });
-      });
     },
   },
 };

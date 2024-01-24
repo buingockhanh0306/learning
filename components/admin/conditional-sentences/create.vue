@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Heading text="Update tense" />
+    <Heading text="Add Conditional Sentences" />
     <div class="flex flex-col gap-4 mt-8">
       <div
         class="flex laptop:flex-row laptop:gap-16 mobile:flex-col mobile:gap-4"
@@ -9,9 +9,9 @@
           <TextField
             fieldName="Title"
             placeholder="Please enter title..."
-            v-model="title"
             @blur="handleBlur('title')"
             @input="handleInput('title')"
+            v-model.trim="formValue.title"
             :className="errorField.title ? 'is-error' : 'bg-white'"
           />
           <ErrorMessage
@@ -23,9 +23,9 @@
           <TextField
             fieldName="Description"
             placeholder="Please enter description..."
-            v-model="description"
             @blur="handleBlur('description')"
             @input="handleInput('description')"
+            v-model.trim="formValue.description"
             :className="errorField.description ? 'is-error' : 'bg-white'"
           />
           <ErrorMessage
@@ -41,14 +41,14 @@
           :isDisable="true"
           fieldName="Slug"
           className="bg-white"
-          v-model="slug"
+          v-model="formValue.slug"
         />
       </div>
       <div class="flex flex-col gap-2 mt-4">
         <span class="font-semibold text-textPrimary">Content</span>
         <editor
           :api-key="tinyMCEKey"
-          v-model="content"
+          v-model="formValue.content"
           @onBlur="handleBlur('content')"
           @input="handleInput('content')"
           :init="initEditor"
@@ -66,8 +66,8 @@
             @handleClick="handleBack"
           />
           <Button
-            text="Update"
-            @handleClick="handleUpdate"
+            text="Add"
+            @handleClick="handleCreate"
             :className="isDisableButton ? 'is-disable' : ''"
           />
         </div>
@@ -82,14 +82,14 @@ import Button from "~/components/common/Button.vue";
 import TextField from "~/components/common/TextField.vue";
 import Editor from "@tinymce/tinymce-vue";
 import { mapActions, mapGetters } from "vuex";
+import { v4 as uuidv4 } from "uuid";
 import generate from "~/mixins/generate";
 import ErrorMessage from "~/components/common/ErrorMessage.vue";
 import { ERROR_MESSAGE, TYPE_BUTTON } from "~/constants/";
 
 export default {
-  name: "EditUser",
+  name: "CreateUser",
   layout: "default",
-  mixins: [generate],
   components: {
     Heading,
     TextField,
@@ -97,23 +97,23 @@ export default {
     Button,
     ErrorMessage,
   },
-  watch: {
-    title(value) {
-      this.slug = this.convertToSlug(value);
-    },
-  },
+  mixins: [generate],
   data() {
     return {
-      title: "",
-      description: "",
-      slug: "",
-      content: "",
-      tinyMCEKey: process.env.tinyMCEKey,
       TYPE_BUTTON,
+      tinyMCEKey: process.env.tinyMCEKey,
+      formValue: {
+        title: "",
+        slug: "/",
+        description: "",
+        image: "",
+        content: "",
+      },
       errorField: {
         title: "",
         slug: "",
         description: "",
+        image: "",
         content: "",
       },
       initEditor: {
@@ -122,23 +122,26 @@ export default {
         plugins: [],
         toolbar:
           "undo redo | fontselect | formatselect link image | bold italic underline | fontsizeselect  forecolor backcolor |\
-                   alignleft aligncenter alignright alignjustify | \
-                   bullist numlist outdent indent | removeformat | help",
+                 alignleft aligncenter alignright alignjustify | \
+                 bullist numlist outdent indent | removeformat | help",
       },
-      selector: "textarea.tinymce",
     };
   },
+  watch: {
+    "formValue.title"(value) {
+      this.formValue.slug = this.convertToSlug(value);
+    },
+  },
   computed: {
-    ...mapGetters("admin", ["tenseDetail"]),
     isDisableButton: {
       get() {
         return !!(
           this.errorField.title ||
           this.errorField.description ||
           this.errorField.content ||
-          !this.title ||
-          !this.description ||
-          !this.content
+          !this.formValue.title ||
+          !this.formValue.description ||
+          !this.formValue.content
         );
       },
       set(value) {
@@ -146,42 +149,34 @@ export default {
       },
     },
   },
-  async mounted() {
-    await this.getTenseById(this.$route.params.id);
-    this.title = this.tenseDetail.title;
-    this.description = this.tenseDetail.description;
-    this.content = this.tenseDetail.content;
+  mounted() {
+    this.setImageUpload("");
   },
   methods: {
-    ...mapActions("admin", ["updateTense", "getTenseById"]),
+    ...mapActions("admin", ["updateConditional", "setImageUpload"]),
     ...mapActions(["setNotify"]),
     handleInput(field) {
       this.errorField[field] = "";
       this.isDisableButton = true;
     },
     handleBlur(field) {
-      if (!this[field]) {
+      if (!this.formValue[field]) {
         this.errorField[field] = ERROR_MESSAGE.FIELD_REQUIRED;
       }
     },
     handleBack() {
-      this.$router.push("/admin/tenses/");
+      this.$router.push("/admin/conditional-sentences/");
     },
-    async handleUpdate() {
+    async handleCreate() {
       try {
-        await this.updateTense({
-          data: {
-            title: this.title,
-            slug: this.slug,
-            description: this.description,
-            content: this.content,
-          },
-          id: this.$route.params.id,
+        await this.updateConditional({
+          data: { ...this.formValue },
+          id: uuidv4(),
         });
-        this.$router.push("/admin/tenses");
+        this.$router.push("/admin/conditional-sentences/");
         this.setNotify({
           isOpen: true,
-          text: "Updated successfully!",
+          text: "Added successfully!",
           type: "success",
         });
       } catch (error) {

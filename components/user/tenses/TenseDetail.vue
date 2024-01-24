@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold text-center uppercase font-magesta">
       {{ tenseDetail?.description }}
     </h1>
-    <p class="text-justify" v-html="getContent"></p>
+    <p class="text-justify" v-html="tenseDetail?.content"></p>
   </div>
 </template>
 
@@ -15,22 +15,12 @@ export default {
   auth: false,
   mixins: [generate],
   computed: {
-    ...mapGetters("user", ["tenseDetail", "listTenses"]),
-    getContent() {
-      let result = this.tenseDetail?.content;
-      const dataLocal = JSON.parse(localStorage.getItem("nameMember")) || {
-        husband: "họ và tên chồng",
-        wife: "họ và tên vợ",
-        sons: "họ và tên con trai",
-        daughters: "họ và tên con gái",
-        children: "họ và tên các con",
-      };
-      return result;
-    },
+    ...mapGetters("user", ["tenseDetail"]),
   },
   async mounted() {
     this.setLoading(true);
     await this.getTenseById(`/${this.$route.params.id}`);
+    console.log(this.tenseDetail);
     this.setLoading(false);
   },
   methods: {

@@ -4,7 +4,7 @@ export const ERROR_MESSAGE = {
   PASSWORD_REQUIRED: "Vui lòng nhập mật khẩu.",
   PASSWORD_STRONG: "Mật khẩu phải có ít nhất 6 ký tự.",
   INVALID_LOGIN_CREDENTIALS: "Email hoặc mật khẩu đăng nhập không chính xác.",
-  FIELD_REQUIRED: "Vui lòng nhập vào trường này.",
+  FIELD_REQUIRED: "Please enter this field.",
 };
 
 export const TYPE_BUTTON = {

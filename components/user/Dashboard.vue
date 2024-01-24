@@ -12,7 +12,6 @@
       >
         Bài viết nổi bật
       </h2>
-      <SwiperCommon :data="listTenses" @handleClick="redirectDetailPage" />
     </section>
     <section class="w-full text-center laptop:mt-24 mobile:mt-16">
       <span

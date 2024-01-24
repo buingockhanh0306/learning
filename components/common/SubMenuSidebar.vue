@@ -107,7 +107,7 @@ export default {
       this.isOpenSubMenu = !this.isOpenSubMenu;
     },
     redirectPage(slug) {
-      this.$router.push(`/posts${slug}`);
+      this.$router.push(`/${this.pathParent}${slug}`);
     },
   },
 };

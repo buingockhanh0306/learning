@@ -108,8 +108,14 @@
               <SubMenuSidebar
                 :dataSubmenu="listTenses"
                 iconName="auto_stories"
-                pathParent="posts"
-                textParent="Văn cúng"
+                pathParent="tenses"
+                textParent="Thì trong câu"
+              />
+              <SubMenuSidebar
+                :dataSubmenu="listConditional"
+                iconName="auto_stories"
+                pathParent="conditional-sentences"
+                textParent="Câu điều kiện"
               />
               <li class="cursor-pointer" @click="$router.push('/setting-name')">
                 <a
@@ -168,7 +174,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("user", ["tenseDetail", "listTenses"]),
+    ...mapGetters("user", ["tenseDetail", "listTenses", "listConditional"]),
     textBreadCrumb() {
       const pathArr = this.$route.path?.split("/");
       pathArr.shift();
@@ -193,9 +199,10 @@ export default {
   },
   async mounted() {
     await this.getTenses();
+    await this.getConditional();
   },
   methods: {
-    ...mapActions("user", ["getTenses", "getImage"]),
+    ...mapActions("user", ["getTenses", "getImage", "getConditional"]),
     ...mapMutations("user", ["SET_TENSE_DETAIL"]),
     openSidebar() {
       this.isOpenSidebar = true;
@@ -207,9 +214,9 @@ export default {
       this.isOpenMenu = !this.isOpenMenu;
     },
     handleSearch() {
-      this.resultSearch = this.listTenses.filter((item) =>
-        item.title.toLowerCase().includes(this.inputSearch.toLowerCase())
-      );
+      // this.resultSearch = this.listTenses.filter((item) =>
+      //   item.title.toLowerCase().includes(this.inputSearch.toLowerCase())
+      // );
     },
     redirectPost(slug) {
       this.$router.push(`/posts${slug}`);

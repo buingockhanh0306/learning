@@ -184,9 +184,14 @@ export default {
           slug: "/admin/",
         },
         {
-          text: "Quản lý bài viết",
+          text: "Tenses manager",
           icon: "feed",
           slug: "/admin/tenses/",
+        },
+        {
+          text: "Conditional manager",
+          icon: "feed",
+          slug: "/admin/conditional-sentences/",
         },
         {
           text: "Về trang người dùng",

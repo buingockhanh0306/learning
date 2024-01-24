@@ -14,7 +14,7 @@
           'bg-red-500': type === 'error',
         }"
       >
-        <p class="font-bold">Thông báo</p>
+        <p class="font-bold">Notification</p>
         <p>{{ message }}</p>
       </div>
     </transition>

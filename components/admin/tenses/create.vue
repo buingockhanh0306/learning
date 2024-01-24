@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Heading text="Thêm bài viết mới" />
+    <Heading text="Add new tense" />
     <div class="flex flex-col gap-4 mt-8">
       <div
         class="flex laptop:flex-row laptop:gap-16 mobile:flex-col mobile:gap-4"
       >
         <div class="flex flex-col w-full">
           <TextField
-            fieldName="Tiêu đề bài viết"
-            placeholder="Vui lòng nhập tiêu đề..."
+            fieldName="Title"
+            placeholder="Please enter title..."
             @blur="handleBlur('title')"
             @input="handleInput('title')"
             v-model.trim="formValue.title"
@@ -21,8 +21,8 @@
         </div>
         <div class="flex flex-col w-full">
           <TextField
-            fieldName="Mô tả bài viết"
-            placeholder="Vui lòng nhập mô tả..."
+            fieldName="Description"
+            placeholder="Please enter description..."
             @blur="handleBlur('description')"
             @input="handleInput('description')"
             v-model.trim="formValue.description"
@@ -44,9 +44,8 @@
           v-model="formValue.slug"
         />
       </div>
-      <UploadImage />
       <div class="flex flex-col gap-2 mt-4">
-        <span class="font-semibold text-textPrimary">Nội dung bài viết</span>
+        <span class="font-semibold text-textPrimary">Content</span>
         <editor
           :api-key="tinyMCEKey"
           v-model="formValue.content"
@@ -63,11 +62,11 @@
         <div class="flex gap-6 laptop:w-1/4 mobile:w-full">
           <Button
             :type="TYPE_BUTTON.RED"
-            text="Quay lại"
+            text="Return"
             @handleClick="handleBack"
           />
           <Button
-            text="Tạo bài viết"
+            text="Add"
             @handleClick="handleCreate"
             :className="isDisableButton ? 'is-disable' : ''"
           />
@@ -87,7 +86,6 @@ import { v4 as uuidv4 } from "uuid";
 import generate from "~/mixins/generate";
 import ErrorMessage from "~/components/common/ErrorMessage.vue";
 import { ERROR_MESSAGE, TYPE_BUTTON } from "~/constants/";
-import UploadImage from "~/components/common/UploadImage.vue";
 
 export default {
   name: "CreateUser",
@@ -98,7 +96,6 @@ export default {
     editor: Editor,
     Button,
     ErrorMessage,
-    UploadImage,
   },
   mixins: [generate],
   data() {
@@ -174,19 +171,19 @@ export default {
     async handleCreate() {
       try {
         await this.updateTense({
-          data: { ...this.formValue, image: this.imageUpload },
+          data: { ...this.formValue },
           id: uuidv4(),
         });
         this.$router.push("/admin/tenses/");
         this.setNotify({
           isOpen: true,
-          text: "Tạo bài viết thành công",
+          text: "Added successfully",
           type: "success",
         });
       } catch (error) {
         this.setNotify({
           isOpen: true,
-          text: "Đã có lỗi xảy ra",
+          text: "Some wrong!",
           type: "error",
         });
       }

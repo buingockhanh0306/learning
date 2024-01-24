@@ -1,6 +1,8 @@
 export const state = () => ({
-  posts: null,
+  tenses: null,
   tenseDetail: null,
+  conditional: null,
+  conditionalDetail: null,
   imageUpload: "",
   initImage: null,
   user: {
@@ -17,10 +19,16 @@ export const state = () => ({
 
 export const getters = {
   listTenses(state) {
-    return state.posts;
+    return state.tenses;
   },
   tenseDetail(state) {
     return state.tenseDetail;
+  },
+  listConditional(state) {
+    return state.conditional;
+  },
+  conditionalDetail(state) {
+    return state.conditionalDetail;
   },
   inforUser(state) {
     return state.user;
@@ -38,10 +46,16 @@ export const getters = {
 
 export const mutations = {
   SET_LIST_TENSES(state, payload) {
-    state.posts = payload;
+    state.tenses = payload;
   },
   SET_TENSE_DETAIL(state, payload) {
     state.tenseDetail = payload;
+  },
+  SET_LIST_CONDITIONAL(state, payload) {
+    state.conditional = payload;
+  },
+  SET_CONDITIONAL_DETAIL(state, payload) {
+    state.conditionalDetail = payload;
   },
   SET_INFOR_USER(state, payload) {
     state.user.email = payload?.email;
@@ -72,6 +86,8 @@ export const actions = {
   setInitImage({ commit }, payload) {
     commit("SET_INIT_IMAGE", payload);
   },
+
+  // Tense
   async getTenses({ commit, getters }, payload) {
     const collection = await this.$fire.firestore.collection("tenses").get();
     const data = collection.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -100,6 +116,42 @@ export const actions = {
   async deleteTense(_, id) {
     await this.$fire.firestore.collection("tenses").doc(id).delete();
   },
+
+  // Conditional Sentences
+  async getConditional({ commit, getters }, payload) {
+    const collection = await this.$fire.firestore
+      .collection("conditional-sentences")
+      .get();
+    const data = collection.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    commit(
+      "SET_LIST_CONDITIONAL",
+      data.slice((payload.currentPage - 1) * 10, payload.currentPage * 10)
+    );
+    commit("SET_PAGINATION", {
+      ...getters.pagination,
+      totalPage: Math.ceil(data.length / 10),
+    });
+  },
+  async getConditionalById({ commit }, id) {
+    const collection = await this.$fire.firestore
+      .collection("conditional-sentences")
+      .doc(id)
+      .get();
+    commit("SET_CONDITIONAL_DETAIL", collection.data());
+  },
+  async updateConditional(_, payload) {
+    await this.$fire.firestore
+      .collection("conditional-sentences")
+      .doc(payload.id)
+      .set(payload.data);
+  },
+  async deleteConditional(_, id) {
+    await this.$fire.firestore
+      .collection("conditional-sentences")
+      .doc(id)
+      .delete();
+  },
+
   async uploadImage(_, selectedFile) {
     if (!selectedFile) {
       return;
@@ -107,12 +159,6 @@ export const actions = {
     const storageRef = this.$fire.storage.ref();
     const fileRef = storageRef.child(selectedFile.name);
     await fileRef.put(selectedFile);
-  },
-  async updateIrregularVerb(_, payload) {
-    await this.$fire.firestore
-      .collection("irregular_verbs")
-      .doc(payload.id)
-      .set(payload.data);
   },
   async getImage(_, imageName) {
     const storageRef = this.$fire.storage.ref();
