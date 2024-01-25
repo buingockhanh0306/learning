@@ -41,7 +41,7 @@
                     id="icon"
                     name="icon"
                     class="block w-full px-4 py-2 text-base border border-gray-200 rounded-lg ps-11 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Tìm kiếm bài viết"
+                    :placeholder="textPlaceholder"
                   />
                   <ul
                     v-if="inputSearch"
@@ -85,7 +85,7 @@
               class="flex-none text-xl font-semibold"
               href="#"
               aria-label="Brand"
-              >Văn cúng</a
+              >Học Tiếng Anh</a
             >
           </div>
 
@@ -134,6 +134,19 @@
                 pathParent="conditional-sentences"
                 textParent="Câu điều kiện"
               />
+              <li class="cursor-pointer" @click="$router.push('/settings')">
+                <a
+                  :class="
+                    $route.path === '/settings' && 'text-textHover bg-gray-100'
+                  "
+                  class="flex items-center gap-x-3.5 py-2 px-2.5 text-base text-slate-700 rounded-lg hover:bg-gray-100"
+                >
+                  <span class="text-xl font-light material-symbols-outlined">
+                    settings
+                  </span>
+                  Cài đặt
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -165,7 +178,6 @@
 import Loading from "~/components/common/Loading.vue";
 import SubMenuSidebar from "~/components/common/SubMenuSidebar.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import { PATH_TO_TEXT } from "~/constants";
 import Notify from "~/components/common/Notify";
 export default {
   name: "defaultLayout",
@@ -181,26 +193,19 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["tenseDetail", "listTenses", "listConditional"]),
-    textBreadCrumb() {
-      const pathArr = this.$route.path?.split("/");
-      pathArr.shift();
-      return PATH_TO_TEXT.find((item) => item.path === pathArr[0])?.text || "";
+    textPlaceholder() {
+      switch (this.$route.path) {
+        case "/irregular_verbs":
+          return "Tìm kiếm động từ bất quy tắc";
+        default:
+          return "Tìm kiếm";
+      }
     },
   },
   watch: {
     "$route.path"() {
       this.SET_TENSE_DETAIL(null);
       this.closeSidebar();
-    },
-    "resultSearch.length": {
-      handler() {
-        this.arrImage = [];
-        this.resultSearch.forEach(async (element) => {
-          let imageItem = await this.getImage(element.image);
-          this.arrImage.push(imageItem);
-        });
-      },
-      immediate: true,
     },
   },
   async mounted() {

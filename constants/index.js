@@ -12,18 +12,3 @@ export const TYPE_BUTTON = {
   DEFAULT: "bg-textHover",
   GRAY: "bg-gray-400 hover:bg-gray-500",
 };
-
-export const PATH_TO_TEXT = [
-  {
-    path: "",
-    text: "Trang chủ",
-  },
-  {
-    path: "posts",
-    text: "Văn cúng",
-  },
-  {
-    path: "settings",
-    text: "Cài đặt",
-  },
-];

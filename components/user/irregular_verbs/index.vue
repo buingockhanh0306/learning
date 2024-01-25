@@ -1,44 +1,100 @@
 <template>
   <div class="relative">
-    <table
-      class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400"
+    <h2
+      class="mb-8 text-2xl font-semibold text-center uppercase text-textPrimary"
     >
-      <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-        <tr>
-          <th
-            scope="col"
-            class="px-6 py-3 text-center"
-            :class="[
-              isMobileScreen &&
-                (item === 'Dịch nghĩa' || item === 'STT') &&
-                'hidden',
-            ]"
-            v-for="item in headers"
-            :key="item"
+      Bảng động từ bất quy tắc
+    </h2>
+    <div
+      class="overflow-y-hidden mobile:overflow-x-scroll laptop:overflow-x-hidden"
+    >
+      <table class="w-full text-sm text-left text-gray-500 rtl:text-right">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 text-center"
+              v-for="item in headers"
+              :key="item"
+            >
+              {{ item }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="text-center bg-white border-b"
+            v-for="(item, index) in listIrregularVerbs"
+            :key="item.id"
           >
-            {{ item }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-          v-for="(item, index) in listIrregularVerbs"
-          :key="item.id"
-        >
-          <th
-            scope="row"
-            class="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white mobile:hidden laptop:block"
-          >
-            {{ (pagination.currentPage - 1) * 10 + index + 1 }}
-          </th>
-          <td class="px-6 py-4">{{ item.base }}</td>
-          <td class="px-6 py-4">{{ item.past }}</td>
-          <td class="px-6 py-4">{{ item.past2 }}</td>
-          <td class="px-6 py-4 mobile:hidden laptop:block">{{ item.mean }}</td>
-        </tr>
-      </tbody>
-    </table>
+            <th
+              scope="row"
+              class="py-4 font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ (pagination.currentPage - 1) * 10 + index + 1 }}
+            </th>
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-center gap-3">
+                <div class="flex flex-col">
+                  <span>{{ item.base }}</span>
+                  <span class="text-textHover">/{{ item.baseIPA }}/</span>
+                </div>
+                <span
+                  class="cursor-pointer material-symbols-outlined"
+                  :class="
+                    textSpeaking === item.base + 'base'
+                      ? 'text-textHover'
+                      : 'text-textPrimary'
+                  "
+                  @click="handleSpeak('base', item.base)"
+                >
+                  volume_up
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-center gap-3">
+                <div class="flex flex-col">
+                  <span>{{ item.past }}</span>
+                  <span class="text-textHover">/{{ item.pastIPA }}/</span>
+                </div>
+                <span
+                  class="cursor-pointer material-symbols-outlined"
+                  :class="
+                    textSpeaking === item.past + 'past'
+                      ? 'text-textHover'
+                      : 'text-textPrimary'
+                  "
+                  @click="handleSpeak('past', item.past)"
+                >
+                  volume_up
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-center gap-3">
+                <div class="flex flex-col">
+                  <span>{{ item.past2 }}</span>
+                  <span class="text-textHover">/{{ item.past2IPA }}/</span>
+                </div>
+                <span
+                  class="cursor-pointer material-symbols-outlined"
+                  :class="
+                    textSpeaking === item.past2 + 'past2'
+                      ? 'text-textHover'
+                      : 'text-textPrimary'
+                  "
+                  @click="handleSpeak('past2', item.past2)"
+                >
+                  volume_up
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4">{{ item.mean }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="flex w-full mt-8 laptop:justify-between mobile:justify-end">
       <div class="items-center gap-4 mb-8 mobile:hidden laptop:flex">
         <span class="text-sm text-textPrimary">Show: </span>
@@ -73,6 +129,7 @@ export default {
   data() {
     return {
       dataSelect: [10, 20, 50],
+      textSpeaking: "",
       headers: [
         "STT",
         "Động từ nguyên mẫu",
@@ -103,6 +160,16 @@ export default {
         itemPerPage: item,
       });
       await this.getIrregularVerbs(this.pagination);
+    },
+    handleSpeak(key, text) {
+      responsiveVoice.speak(text, "UK English Male", {
+        onstart: () => {
+          this.textSpeaking = text + key;
+        },
+        onend: () => {
+          this.textSpeaking = "";
+        },
+      });
     },
   },
 };

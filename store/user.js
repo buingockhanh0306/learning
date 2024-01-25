@@ -1,7 +1,10 @@
+import irregular_verbs from "~/constants/irregular_verbs.json";
+import { cloneDeep } from "lodash";
 export const state = () => ({
   tenses: [],
   tenseDetail: null,
   irregularVerbs: [],
+  irregularVerbsFull: _.cloneDeep(irregular_verbs),
   conditional: [],
   conditionalDetail: null,
   pagination: {
@@ -29,6 +32,9 @@ export const getters = {
   },
   listIrregularVerbs(state) {
     return state.irregularVerbs;
+  },
+  listIrregularVerbsFull(state) {
+    return state.irregularVerbsFull;
   },
 };
 
@@ -105,10 +111,11 @@ export const actions = {
     }
   },
   async getIrregularVerbs({ state, commit }, payload) {
-    const collection = await this.$fire.firestore
-      .collection("irregular_verbs")
-      .get();
-    const data = collection.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    // const collection = await this.$fire.firestore
+    //   .collection("irregular_verbs")
+    //   .get();
+    // const data = collection.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const data = _.cloneDeep(state.irregularVerbsFull);
     commit("SET_PAGINATION", {
       ...state.pagination,
       totalPage: Math.ceil(data.length / state.pagination.itemPerPage),

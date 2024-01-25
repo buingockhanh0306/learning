@@ -21,6 +21,11 @@ export default {
         href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
       },
     ],
+    script: [
+      {
+        src: "https://code.responsivevoice.org/responsivevoice.js?key=sZIrW26S",
+      }, // load script in your static folder
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
