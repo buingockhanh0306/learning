@@ -3,6 +3,15 @@ const mixin = {
   data() {
     return {
       isMobileScreen: window.innerWidth <= 960,
+      initEditor: {
+        height: 500,
+        menubar: false,
+        plugins: "table",
+        toolbar:
+          "undo redo | fontselect | formatselect link image | bold italic underline | table | fontsizeselect  forecolor backcolor |\
+                 alignleft aligncenter alignright alignjustify | \
+                 bullist numlist outdent indent | removeformat | help",
+      },
     };
   },
   computed: {

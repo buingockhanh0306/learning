@@ -1,6 +1,7 @@
 import irregular_verbs from "~/constants/irregular_verbs.json";
 import { cloneDeep } from "lodash";
 export const state = () => ({
+  isSearching: false,
   tenses: [],
   tenseDetail: null,
   irregularVerbs: [],
@@ -15,6 +16,9 @@ export const state = () => ({
 });
 
 export const getters = {
+  isSearching(state) {
+    return state.isSearching;
+  },
   listTenses(state) {
     return state.tenses;
   },
@@ -39,6 +43,9 @@ export const getters = {
 };
 
 export const mutations = {
+  SET_IS_SEARCHING(state, payload) {
+    state.isSearching = payload;
+  },
   SET_LIST_TENSES(state, payload) {
     state.tenses = payload;
   },
@@ -60,6 +67,9 @@ export const mutations = {
 };
 
 export const actions = {
+  setIsSearching({ commit }, payload) {
+    commit("SET_IS_SEARCHING", payload);
+  },
   setPagination({ commit }, payload) {
     commit("SET_PAGINATION", payload);
   },

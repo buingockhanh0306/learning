@@ -95,7 +95,10 @@
         </tbody>
       </table>
     </div>
-    <div class="flex w-full mt-8 laptop:justify-between mobile:justify-end">
+    <div
+      v-if="!isSearching"
+      class="flex w-full mt-8 laptop:justify-between mobile:justify-end"
+    >
       <div class="items-center gap-4 mb-8 mobile:hidden laptop:flex">
         <span class="text-sm text-textPrimary">Show: </span>
         <Select :dataSelect="dataSelect" @handleSelect="selectItemPerPage" />
@@ -140,7 +143,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("user", ["listIrregularVerbs", "pagination"]),
+    ...mapGetters("user", ["listIrregularVerbs", "pagination", "isSearching"]),
   },
   async mounted() {
     await this.getIrregularVerbs(this.pagination);

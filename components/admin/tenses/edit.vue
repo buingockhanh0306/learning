@@ -116,16 +116,6 @@ export default {
         description: "",
         content: "",
       },
-      initEditor: {
-        height: 500,
-        menubar: false,
-        plugins: [],
-        toolbar:
-          "undo redo | fontselect | formatselect link image | bold italic underline | fontsizeselect  forecolor backcolor |\
-                   alignleft aligncenter alignright alignjustify | \
-                   bullist numlist outdent indent | removeformat | help",
-      },
-      selector: "textarea.tinymce",
     };
   },
   computed: {

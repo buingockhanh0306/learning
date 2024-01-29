@@ -153,30 +153,30 @@ export default {
       this.isDisplayPassword = !this.isDisplayPassword;
     },
     async handleSignup() {
-      // alert("Tính năng này đang bị chặn");
-      try {
-        const payload = {
-          email: this.email,
-          password: this.password,
-          returnSecureToken: true,
-        };
-        const result = await this.signup(payload);
-        if (result) {
-          this.$router.push("/login");
-          this.setNotify({
-            isOpen: true,
-            text: "Đăng ký tài khoản thành công!",
-            type: "success",
-          });
-        }
-      } catch (error) {
-        console.log(error.response);
-        this.setNotify({
-          isOpen: true,
-          text: error.response.data.error.message,
-          type: "error",
-        });
-      }
+      alert("Tính năng này đang bị chặn");
+      // try {
+      //   const payload = {
+      //     email: this.email,
+      //     password: this.password,
+      //     returnSecureToken: true,
+      //   };
+      //   const result = await this.signup(payload);
+      //   if (result) {
+      //     this.$router.push("/login");
+      //     this.setNotify({
+      //       isOpen: true,
+      //       text: "Đăng ký tài khoản thành công!",
+      //       type: "success",
+      //     });
+      //   }
+      // } catch (error) {
+      //   console.log(error.response);
+      //   this.setNotify({
+      //     isOpen: true,
+      //     text: error.response.data.error.message,
+      //     type: "error",
+      //   });
+      // }
     },
     handleForgotPassword() {},
     redirectLogin() {

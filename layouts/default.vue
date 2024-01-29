@@ -43,7 +43,7 @@
                     class="block w-full px-4 py-2 text-base border border-gray-200 rounded-lg ps-11 focus:border-blue-500 focus:ring-blue-500"
                     :placeholder="textPlaceholder"
                   />
-                  <ul
+                  <!-- <ul
                     v-if="inputSearch"
                     class="absolute left-0 right-0 w-full overflow-y-scroll bg-gray-100 border border-gray-200 no-scrollbar max-h-60 top-11"
                   >
@@ -60,14 +60,12 @@
                       />
                       <div class="flex flex-col">
                         <span class="font-semibold text-textPrimary">{{
-                          item.title
+                          item.base
                         }}</span>
-                        <span class="text-textPrimary">{{
-                          item.description
-                        }}</span>
+                        <span class="text-textPrimary">{{ item.past }}</span>
                       </div>
                     </li>
-                  </ul>
+                  </ul> -->
                 </div>
               </div>
             </div>
@@ -187,12 +185,18 @@ export default {
       isOpenSidebar: false,
       isOpenMenu: false,
       inputSearch: "",
-      resultSearch: [],
       arrImage: [],
     };
   },
   computed: {
-    ...mapGetters("user", ["tenseDetail", "listTenses", "listConditional"]),
+    ...mapGetters("user", [
+      "tenseDetail",
+      "listTenses",
+      "listConditional",
+      "listIrregularVerbsFull",
+      "pagination",
+      "isSearching",
+    ]),
     textPlaceholder() {
       switch (this.$route.path) {
         case "/irregular_verbs":
@@ -204,6 +208,7 @@ export default {
   },
   watch: {
     "$route.path"() {
+      this.inputSearch = "";
       this.SET_TENSE_DETAIL(null);
       this.closeSidebar();
     },
@@ -213,8 +218,18 @@ export default {
     await this.getConditional();
   },
   methods: {
-    ...mapActions("user", ["getTenses", "getImage", "getConditional"]),
-    ...mapMutations("user", ["SET_TENSE_DETAIL"]),
+    ...mapActions("user", [
+      "getTenses",
+      "getImage",
+      "getConditional",
+      "setIsSearching",
+      "getIrregularVerbs",
+    ]),
+    ...mapMutations("user", [
+      "SET_TENSE_DETAIL",
+      "SET_LIST_IRREGULAR_VERBS",
+      "SET_PAGINATION",
+    ]),
     openSidebar() {
       this.isOpenSidebar = true;
     },
@@ -225,9 +240,28 @@ export default {
       this.isOpenMenu = !this.isOpenMenu;
     },
     handleSearch() {
-      // this.resultSearch = this.listTenses.filter((item) =>
-      //   item.title.toLowerCase().includes(this.inputSearch.toLowerCase())
-      // );
+      switch (this.$route.path) {
+        case "/irregular_verbs":
+          if (this.inputSearch) {
+            this.setIsSearching(true);
+            let resultSearch = this.listIrregularVerbsFull.filter((item) =>
+              item.base.toLowerCase().includes(this.inputSearch.toLowerCase())
+            );
+            this.SET_PAGINATION({
+              ...this.pagination,
+              totalPage: Math.ceil(
+                resultSearch.length / this.pagination.itemPerPage
+              ),
+            });
+            this.SET_LIST_IRREGULAR_VERBS(resultSearch);
+          } else {
+            this.setIsSearching(false);
+            this.getIrregularVerbs(this.pagination);
+          }
+          break;
+        default:
+          return "Tìm kiếm";
+      }
     },
     redirectPost(slug) {
       this.$router.push(`/posts${slug}`);
